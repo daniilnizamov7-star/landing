@@ -14,6 +14,8 @@
       --accent: #3b82f6;
       --accent2: #8b5cf6;
       --accent-glow: rgba(59,130,246,0.4);
+      --success: #10b981;
+      --success-glow: rgba(16,185,129,0.4);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,6 +63,29 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+    .nav-contacts {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav-phone {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 100px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-phone:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+    }
     .nav-cta {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
@@ -77,9 +102,10 @@
       box-shadow: 0 0 36px rgba(59,130,246,0.6);
     }
     @media(max-width:768px) {
-      nav { padding: 14px 20px; }
+      nav { padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
       .logo { font-size: 17px; }
-      .nav-cta { padding: 8px 18px; font-size: 13px; }
+      .nav-contacts { width: 100%; justify-content: center; }
+      .nav-phone, .nav-cta { padding: 8px 16px; font-size: 12px; }
     }
 
     /* ── LOADER ЭКРАН ── */
@@ -206,7 +232,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-    /* задержки появления */
     .text-element:nth-child(1) { transition-delay: 0s; }
     .text-element:nth-child(2) { transition-delay: 0.12s; }
     .text-element:nth-child(3) { transition-delay: 0.24s; }
@@ -246,6 +271,13 @@
     .cta-btn:hover {
       transform: scale(1.05) translateY(-2px);
       box-shadow: 0 0 56px rgba(59,130,246,0.65), 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .cta-btn.whatsapp {
+      background: linear-gradient(135deg, var(--success), #059669);
+      box-shadow: 0 0 32px var(--success-glow);
+    }
+    .cta-btn.whatsapp:hover {
+      box-shadow: 0 0 56px rgba(16,185,129,0.65);
     }
     @media(max-width:768px) {
       h2 { font-size: clamp(26px, 7vw, 44px); }
@@ -330,6 +362,12 @@
       font-weight: 900;
       letter-spacing: -1.5px;
     }
+    .footer-contacts {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
     .footer-note {
       font-size: 13px;
       color: rgba(255,255,255,0.3);
@@ -344,6 +382,20 @@
     .footer-made span {
       color: var(--accent);
       font-weight: 600;
+    }
+    .footer-phone {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 8px;
+    }
+    .footer-phone a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-phone a:hover {
+      color: var(--accent2);
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -365,7 +417,10 @@
   <!-- НАВ -->
   <nav>
     <div class="logo">Nizamov.tech</div>
-    <a href="https://t.me/Aslyamov74" class="nav-cta" target="_blank">Написать →</a>
+    <div class="nav-contacts">
+      <a href="tel:+79911745113" class="nav-phone">📞 +7 (991) 174-51-13</a>
+      <a href="https://t.me/Aslyamov74" class="nav-cta" target="_blank">Telegram →</a>
+    </div>
   </nav>
 
   <main>
@@ -374,9 +429,15 @@
 
   <footer id="contact">
     <h2>Готовы к потоку клиентов?</h2>
-    <a href="https://t.me/Aslyamov74" class="cta-btn" target="_blank">Написать в Telegram</a>
+    <div class="footer-contacts">
+      <a href="https://t.me/Aslyamov74" class="cta-btn" target="_blank">Telegram</a>
+      <a href="tel:+79911745113" class="cta-btn whatsapp">📞 Позвонить</a>
+    </div>
     <p class="footer-note">© 2025 Nizamov.tech · Челябинск</p>
     <p class="footer-made">Этот лендинг сделан <span>Nizamov.tech</span> · от 15 000₽</p>
+    <p class="footer-phone">
+      Или напишите в WhatsApp: <a href="https://wa.me/79911745113" target="_blank">+7 (991) 174-51-13</a>
+    </p>
   </footer>
 
 <script>
@@ -450,7 +511,7 @@ class ScrollVideo {
     this.loadedCount = 0;
     this.currentFrame = 0;
     this.targetFrame = 0;
-    this.smoothing = 0.08;  // плавнее (было 0.12)
+    this.smoothing = 0.08;
     this.ready = false;
     this.loading = false;
     this.prevProgress = -1;
@@ -520,18 +581,13 @@ class ScrollVideo {
   }
 
   updateUI(progress) {
-    // Backdrop — появляется с 0.08 прогресса
     const showBackdrop = progress > 0.08;
     this.backdrop.classList.toggle('visible', showBackdrop);
-
-    // Counter
     const showCounter = progress > 0.05;
     this.counter.classList.toggle('visible', showCounter);
     if (showCounter && !this.cline.classList.contains('running')) {
       this.cline.classList.add('running');
     }
-
-    // Текст
     const texts = this.section.querySelectorAll('.text-element');
     texts.forEach(el => {
       const trigger = parseFloat(el.dataset.trigger);
@@ -562,7 +618,6 @@ let totalLoaded = 0;
 const totalFirstTwo = SECTIONS_CONFIG[0].frames + (SECTIONS_CONFIG[1] ? SECTIONS_CONFIG[1].frames : 0);
 
 function onProgress(folder, loaded, total) {
-  // Считаем только первые две секции для loader
   const sIdx = SECTIONS_CONFIG.findIndex(c => c.folder === folder);
   if (sIdx < 2) {
     totalLoaded++;
@@ -575,11 +630,8 @@ function onProgress(folder, loaded, total) {
   }
 }
 
-// Грузим первые две секции сразу
 videos[0].loadFrames(onProgress);
 if (videos[1]) videos[1].loadFrames(onProgress);
-
-// Фикс: если кадров мало — сразу скрываем лоадер через 3 сек
 setTimeout(() => globalLoader.classList.add('hidden'), 3000);
 
 // ─── ПЕРЕХОД МЕЖДУ СЕКЦИЯМИ ──────────────────────────────────────────
@@ -607,7 +659,6 @@ function renderLoop() {
         v.update();
         visibleIdx = i;
       }
-      // Грузим следующую заранее
       if (i + 1 < videos.length) {
         const next = videos[i + 1];
         if (!next.ready && !next.loading) next.loadFrames(onProgress);
@@ -617,12 +668,10 @@ function renderLoop() {
     }
   });
 
-  // Переход между секциями
   if (visibleIdx !== -1 && visibleIdx !== lastSection) {
     triggerSectionChange(visibleIdx);
   }
 
-  // Глобальный прогресс-бар
   const totalScroll = document.body.scrollHeight - window.innerHeight;
   if (totalScroll > 0) {
     globalProgress.style.width = `${(window.scrollY / totalScroll) * 100}%`;
@@ -632,8 +681,8 @@ function renderLoop() {
 }
 
 window.addEventListener('resize', () => videos.forEach(v => v.resize()));
-
 requestAnimationFrame(renderLoop);
 </script>
+
 </body>
 </html>

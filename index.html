@@ -10,7 +10,7 @@
     :root {
       --bg: #050810;
       --text: #ffffff;
-      --muted: rgba(255,255,255,0.7);
+      --muted: rgba(255,255,255,0.75);
       --accent: #3b82f6;
       --accent-glow: rgba(59,130,246,0.6);
     }
@@ -33,8 +33,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(5,8,16,0.6);
-      backdrop-filter: blur(12px);
+      background: rgba(5,8,16,0.5);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .logo { 
@@ -59,158 +59,110 @@
     }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--accent-glow); }
 
-    /* ПРОГРЕСС-БАР (ЯРЧЕ) */
+    /* ПРОГРЕСС-БАР (ЯРКИЙ) */
     .progress-bar {
       position: fixed;
       top: 0; left: 0;
       height: 4px;
       background: linear-gradient(90deg, #3b82f6, #8b5cf6, #f59e0b);
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.9), 0 0 5px #ffffff;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.8), 0 0 4px #ffffff;
       z-index: 1000;
       width: 0%;
       transition: width 0.1s linear;
     }
 
-    /* СЕКЦИИ ВИДЕО */
-    .video-section {
-      position: relative;
-      height: 500vh;
-    }
-    
+    /* СЕКЦИИ */
+    .video-section { position: relative; height: 500vh; }
     .canvas-wrapper {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      width: 100%;
+      position: sticky; top: 0;
+      height: 100vh; width: 100%;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
+    canvas { width: 100%; height: 100%; object-fit: cover; }
 
-    canvas {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* ЗАГРУЗЧИК */
     .loader {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 14px;
-      color: var(--muted);
-      z-index: 10;
-      pointer-events: none;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 14px; color: var(--muted); z-index: 10; pointer-events: none;
     }
 
-    /* КОНТЕНТ ПОВЕРХ ВИДЕО */
+    /* ТЕКСТОВЫЙ БЛОК (СВЕРХУ) */
     .content-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-      pointer-events: none;
-      z-index: 5;
+      justify-content: flex-start; /* Сдвиг наверх */
+      padding-top: 130px; /* Отступ под навигацию */
+      pointer-events: none; z-index: 5;
     }
 
-    /* ПОДЛОЖКА ПОД ТЕКСТ (ЧИТАЕМОСТЬ) */
     .text-backdrop {
-      background: rgba(5, 8, 16, 0.75);
-      backdrop-filter: blur(14px);
-      padding: 28px 36px;
-      border-radius: 20px;
+      background: rgba(5, 8, 16, 0.6); /* Полупрозрачная, не перекрывает видео */
+      backdrop-filter: blur(8px);
+      padding: 18px 24px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      max-width: 90vw;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      max-width: 85vw;
       pointer-events: auto;
+      text-align: center;
     }
 
     .text-element {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      opacity: 0; transform: translateY(15px);
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .text-element.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .text-element.visible { opacity: 1; transform: translateY(0); }
 
     h1, h2 {
-      font-size: clamp(28px, 5vw, 64px);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 12px;
-      letter-spacing: -1px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      font-size: clamp(24px, 4.5vw, 52px);
+      font-weight: 800; line-height: 1.1;
+      margin-bottom: 8px; letter-spacing: -0.5px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
     }
     p {
-      font-size: clamp(14px, 2vw, 18px);
-      color: var(--muted);
-      margin: 0 auto 24px;
-      line-height: 1.5;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+      font-size: clamp(13px, 1.8vw, 17px);
+      color: var(--muted); margin: 0 auto 16px;
+      line-height: 1.4; text-shadow: 0 1px 4px rgba(0,0,0,0.6);
     }
-
     .cta-btn {
       background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      color: #fff;
-      padding: 14px 32px;
-      border-radius: 100px;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
-      transition: all 0.3s;
-      box-shadow: 0 0 25px var(--accent-glow);
+      color: #fff; padding: 12px 28px;
+      border-radius: 100px; font-weight: 700; font-size: 15px;
+      text-decoration: none; transition: all 0.3s;
+      box-shadow: 0 0 20px var(--accent-glow);
       display: inline-block;
     }
-    .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--accent-glow); }
+    .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 35px var(--accent-glow); }
 
-    /* ВОДЯНОЙ ЗНАК / ТЕГ */
+    /* ВОДЯНОЙ ЗНАК */
     .watermark {
-      position: absolute;
-      bottom: 24px;
-      left: 50%;
+      position: absolute; bottom: 24px; left: 50%;
       transform: translateX(-50%);
-      font-size: 11px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      background: rgba(0,0,0,0.35);
-      padding: 6px 14px;
-      border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.65);
+      background: rgba(0,0,0,0.3);
+      padding: 6px 14px; border-radius: 20px;
       backdrop-filter: blur(6px);
       border: 1px solid rgba(255,255,255,0.1);
-      z-index: 6;
-      pointer-events: auto;
-      white-space: nowrap;
+      z-index: 6; pointer-events: auto; white-space: nowrap;
     }
 
     /* ФУТЕР */
     footer {
-      height: 50vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 20px;
-      position: relative;
-      z-index: 10;
-      background: radial-gradient(circle at center, rgba(59,130,246,0.1) 0%, transparent 70%);
+      height: 50vh; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 20px; position: relative; z-index: 10;
+      background: radial-gradient(circle at center, rgba(59,130,246,0.08) 0%, transparent 70%);
     }
 
-    /* МОБИЛЬНЫЙ АДАПТИВ */
     @media (max-width: 768px) {
-      nav { padding: 16px 20px; }
+      nav { padding: 14px 20px; }
       .logo { font-size: 18px; }
-      .text-backdrop { padding: 20px 24px; }
-      h1, h2 { font-size: clamp(24px, 7vw, 40px); }
-      p { font-size: clamp(13px, 4vw, 16px); }
-      .cta-btn { padding: 12px 24px; font-size: 15px; }
+      .content-overlay { padding-top: 100px; }
+      .text-backdrop { padding: 14px 18px; }
+      h1, h2 { font-size: clamp(22px, 6vw, 36px); }
+      p { font-size: clamp(12px, 3.5vw, 15px); }
+      .cta-btn { padding: 10px 22px; font-size: 14px; }
     }
   </style>
 </head>
@@ -228,41 +180,21 @@
   </main>
 
   <footer id="contact">
-    <h2 style="font-size: 40px; text-align:center;">Готовы к потоку клиентов?</h2>
+    <h2 style="font-size: 36px; text-align:center;">Готовы к потоку клиентов?</h2>
     <a href="https://t.me/Aslyamov74" class="cta-btn" target="_blank">Написать в Telegram</a>
-    <p style="margin-top: 20px; font-size: 14px; color: var(--muted);">© 2025 Nizamov.tech · Челябинск</p>
+    <p style="margin-top: 16px; font-size: 13px; color: var(--muted);">© 2025 Nizamov.tech · Челябинск</p>
   </footer>
 
 <script>
-// ─── КОНФИГУРАЦИЯ СЕКЦИЙ ─────────────────────────────────────────────
 const SECTIONS_CONFIG = [
-  { id: 'cosm', folder: 'cosm', frames: 120, 
-    title: 'Ваш бизнес готов к взлёту?',
-    sub: 'Привет. Мы создаем сайты, которые работают на вас 24/7.',
-    cta: 'Запустить проект →', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'ney', folder: 'ney', frames: 120,
-    title: 'Хаос превращаем в систему',
-    sub: 'Умный дизайн. Чистый код. ИИ-оптимизация под капотом.',
-    cta: 'Как это работает?', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'list', folder: 'list', frames: 120,
-    title: 'Красота в деталях',
-    sub: 'Прозрачные цены. Никакой воды. Идеально с первого раза.',
-    cta: 'Узнать стоимость', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'fly', folder: 'fly', frames: 120,
-    title: 'Скорость имеет значение',
-    sub: 'Лендинг за 3 дня. Без турбулентности и срывов сроков.',
-    cta: 'Ускорить бизнес →', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'cat', folder: 'cat', frames: 120,
-    title: 'Работаем без стресса',
-    sub: 'Вы заняты бизнесом — мы заботимся о сайте. Клиенты мурлыкают.',
-    cta: 'Начать спокойно', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'vod', folder: 'vod', frames: 120,
-    title: 'Поток клиентов гарантирован',
-    sub: 'Конверсия бьёт ключом. Готовы к масштабу?',
-    cta: 'Получить консультацию →', ctaLink: 'https://t.me/Aslyamov74' }
+  { id: 'cosm', folder: 'cosm', frames: 120, title: 'Ваш бизнес готов к взлёту?', sub: 'Привет. Мы создаем сайты, которые работают на вас 24/7.', cta: 'Запустить проект →', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'ney', folder: 'ney', frames: 120, title: 'Хаос превращаем в систему', sub: 'Умный дизайн. Чистый код. ИИ-оптимизация под капотом.', cta: 'Как это работает?', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'list', folder: 'list', frames: 120, title: 'Красота в деталях', sub: 'Прозрачные цены. Никакой воды. Идеально с первого раза.', cta: 'Узнать стоимость', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'fly', folder: 'fly', frames: 120, title: 'Скорость имеет значение', sub: 'Лендинг за 3 дня. Без турбулентности и срывов сроков.', cta: 'Ускорить бизнес →', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'cat', folder: 'cat', frames: 120, title: 'Работаем без стресса', sub: 'Вы заняты бизнесом — мы заботимся о сайте. Клиенты мурлыкают.', cta: 'Начать спокойно', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'vod', folder: 'vod', frames: 120, title: 'Поток клиентов гарантирован', sub: 'Конверсия бьёт ключом. Готовы к масштабу?', cta: 'Получить консультацию →', ctaLink: 'https://t.me/Aslyamov74' }
 ];
 
-// ─── ГЕНЕРАЦИЯ РАЗМЕТКИ ──────────────────────────────────────────────
 const container = document.getElementById('sections-container');
 SECTIONS_CONFIG.forEach(cfg => {
   const sec = document.createElement('section');
@@ -272,7 +204,6 @@ SECTIONS_CONFIG.forEach(cfg => {
     <div class="canvas-wrapper">
       <canvas id="canvas-${cfg.id}"></canvas>
       <div class="loader" id="loader-${cfg.id}">Загрузка кадров...</div>
-      
       <div class="content-overlay">
         <div class="text-backdrop">
           <h2 class="text-element" data-trigger="0.15">${cfg.title}</h2>
@@ -280,14 +211,12 @@ SECTIONS_CONFIG.forEach(cfg => {
           <a href="${cfg.ctaLink}" class="cta-btn text-element" data-trigger="0.75" target="_blank">${cfg.cta}</a>
         </div>
       </div>
-
       <div class="watermark">✨ Этот лендинг сделан Nizamov.tech</div>
     </div>
   `;
   container.appendChild(sec);
 });
 
-// ─── КЛАСС УПРАВЛЕНИЯ ВИДЕО ──────────────────────────────────────────
 class ScrollVideo {
   constructor(canvasId, folder, totalFrames) {
     this.canvas = document.getElementById(canvasId);
@@ -296,159 +225,85 @@ class ScrollVideo {
     this.section = this.canvas.closest('.video-section');
     this.folder = folder;
     this.totalFrames = totalFrames;
-    this.frames = [];
-    this.loadedCount = 0;
-    this.currentFrame = 0;
-    this.targetFrame = 0;
-    this.smoothing = 0.12;
-    this.ready = false;
-    this.loading = false;
-
+    this.frames = []; this.loadedCount = 0;
+    this.currentFrame = 0; this.targetFrame = 0;
+    this.smoothing = 0.12; this.ready = false; this.loading = false;
     this.resize();
   }
-
-  resize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-  }
-
+  resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; }
   async loadFrames() {
-    if (this.ready || this.loading) return;
-    this.loading = true;
-    
+    if (this.ready || this.loading) return; this.loading = true;
     const promises = [];
     for (let i = 1; i <= this.totalFrames; i++) {
       const num = String(i).padStart(3, '0');
-      const src = `./frames/${this.folder}/frame_${num}.webp`;
-      promises.push(this.loadImage(src, i));
+      promises.push(this.loadImage(`./frames/${this.folder}/frame_${num}.webp`, i));
     }
     await Promise.all(promises);
-    this.ready = true;
-    this.loader.style.display = 'none';
-    this.draw(0);
+    this.ready = true; this.loader.style.display = 'none'; this.draw(0);
   }
-
   loadImage(src, index) {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        this.frames[index - 1] = img;
-        this.loadedCount++;
-        this.loader.textContent = `Загрузка: ${Math.round((this.loadedCount / this.totalFrames) * 100)}%`;
-        resolve();
-      };
-      img.onerror = () => {
-        console.warn(`Не удалось загрузить: ${src}`);
-        resolve();
-      };
+    return new Promise(resolve => {
+      const img = new Image(); img.src = src;
+      img.onload = () => { this.frames[index-1] = img; this.loadedCount++; this.loader.textContent = `${Math.round((this.loadedCount/this.totalFrames)*100)}%`; resolve(); };
+      img.onerror = () => resolve();
     });
   }
-
   getProgress() {
     const rect = this.section.getBoundingClientRect();
-    const sectionHeight = this.section.offsetHeight;
-    const viewportHeight = window.innerHeight;
-    return Math.max(0, Math.min(1, -rect.top / (sectionHeight - viewportHeight)));
+    return Math.max(0, Math.min(1, -rect.top / (this.section.offsetHeight - window.innerHeight)));
   }
-
   update() {
     if (!this.ready) return;
-    
     const progress = this.getProgress();
     this.targetFrame = progress * (this.totalFrames - 1);
-    
     this.currentFrame += (this.targetFrame - this.currentFrame) * this.smoothing;
-    const frameIndex = Math.round(this.currentFrame);
-    
-    this.draw(frameIndex);
+    this.draw(Math.round(this.currentFrame));
     this.updateTexts(progress);
-    
     return progress;
   }
-
   draw(index) {
-    const img = this.frames[index];
-    if (!img) return;
-    
-    const ctx = this.ctx;
-    const cw = this.canvas.width;
-    const ch = this.canvas.height;
-    const iw = img.naturalWidth;
-    const ih = img.naturalHeight;
-    const imgRatio = iw / ih;
+    const img = this.frames[index]; if (!img) return;
+    const { width: cw, height: ch } = this.canvas;
+    const ratio = img.naturalWidth / img.naturalHeight;
     const canvasRatio = cw / ch;
-    
-    let dw, dh, dx, dy;
-    if (imgRatio > canvasRatio) {
-      dh = ch; dw = dh * imgRatio; dx = (cw - dw) / 2; dy = 0;
-    } else {
-      dw = cw; dh = dw / imgRatio; dx = 0; dy = (ch - dh) / 2;
-    }
-    
-    ctx.clearRect(0, 0, cw, ch);
-    ctx.drawImage(img, dx, dy, dw, dh);
+    let dw, dh, dx = 0, dy = 0;
+    if (ratio > canvasRatio) { dh = ch; dw = dh * ratio; dx = (cw - dw)/2; }
+    else { dw = cw; dh = dw / ratio; dy = (ch - dh)/2; }
+    this.ctx.clearRect(0,0,cw,ch);
+    this.ctx.drawImage(img, dx, dy, dw, dh);
   }
-
   updateTexts(progress) {
-    const texts = this.section.querySelectorAll('.text-element');
-    texts.forEach(el => {
-      const trigger = parseFloat(el.dataset.trigger);
-      if (progress >= trigger) {
-        el.classList.add('visible');
-      } else {
-        el.classList.remove('visible');
-      }
+    this.section.querySelectorAll('.text-element').forEach(el => {
+      el.classList.toggle('visible', progress >= parseFloat(el.dataset.trigger));
     });
   }
 }
 
-// ─── ИНИЦИАЛИЗАЦИЯ И ЦИКЛ ────────────────────────────────────────────
-const videos = SECTIONS_CONFIG.map(cfg => 
-  new ScrollVideo(`canvas-${cfg.id}`, cfg.folder, cfg.frames)
-);
-
+const videos = SECTIONS_CONFIG.map(c => new ScrollVideo(`canvas-${c.id}`, c.folder, c.frames));
 const globalProgress = document.getElementById('globalProgress');
-let lastSectionIndex = 0;
+let lastIdx = 0;
 
-function renderLoop() {
-  let visibleSectionIndex = -1;
-  
+function loop() {
+  let visIdx = -1;
   videos.forEach((v, i) => {
-    const rect = v.section.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight && rect.bottom > 0;
-    const comingSoon = rect.top < window.innerHeight * 2 && rect.top > 0;
-    
-    if (inView && v.ready) {
-      v.update();
-      visibleSectionIndex = i;
-    } else if (comingSoon && !v.ready && !v.loading) {
-      v.loadFrames();
-    }
+    const r = v.section.getBoundingClientRect();
+    const inView = r.top < window.innerHeight && r.bottom > 0;
+    const near = r.top < window.innerHeight * 2 && r.top > 0;
+    if (inView && v.ready) { v.update(); visIdx = i; }
+    else if (near && !v.ready && !v.loading) v.loadFrames();
   });
-  
-  if (visibleSectionIndex !== lastSectionIndex && visibleSectionIndex !== -1) {
-    const nextIndex = visibleSectionIndex + 1;
-    if (nextIndex < videos.length && !videos[nextIndex].ready && !videos[nextIndex].loading) {
-      videos[nextIndex].loadFrames();
-    }
-    lastSectionIndex = visibleSectionIndex;
+  if (visIdx !== lastIdx && visIdx !== -1) {
+    const next = visIdx + 1;
+    if (next < videos.length && !videos[next].ready && !videos[next].loading) videos[next].loadFrames();
+    lastIdx = visIdx;
   }
-  
-  const totalScroll = document.body.scrollHeight - window.innerHeight;
-  globalProgress.style.width = `${(window.scrollY / totalScroll) * 100}%`;
-  
-  requestAnimationFrame(renderLoop);
+  globalProgress.style.width = `${(window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100}%`;
+  requestAnimationFrame(loop);
 }
 
-window.addEventListener('resize', () => {
-  videos.forEach(v => v.resize());
-});
-
-videos[0].loadFrames();
-if (videos[1]) videos[1].loadFrames();
-
-requestAnimationFrame(renderLoop);
+window.addEventListener('resize', () => videos.forEach(v => v.resize()));
+videos[0].loadFrames(); if (videos[1]) videos[1].loadFrames();
+requestAnimationFrame(loop);
 </script>
 
 </body>

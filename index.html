@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nizamov.tech — Лендинги, которые продают</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Syne:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #050810;
       --text: #ffffff;
-      --muted: rgba(255,255,255,0.75);
+      --muted: rgba(255,255,255,0.65);
       --accent: #3b82f6;
-      --accent-glow: rgba(59,130,246,0.6);
+      --accent2: #8b5cf6;
+      --accent-glow: rgba(59,130,246,0.4);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,152 +25,344 @@
       overflow-x: hidden;
     }
 
-    /* НАВИГАЦИЯ */
+    /* ── ПРОГРЕСС-БАР ── */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), #06b6d4);
+      z-index: 300;
+      width: 0%;
+      transition: width 0.08s linear;
+      box-shadow: 0 0 12px rgba(59,130,246,0.8);
+    }
+
+    /* ── НАВИГАЦИЯ ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
+      z-index: 200;
       padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(5,8,16,0.5);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(5,8,16,0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .logo { 
-      font-weight: 800; 
-      font-size: 20px; 
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .nav-cta {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
       padding: 10px 24px;
       border-radius: 100px;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 14px;
       transition: all 0.3s;
-      box-shadow: 0 0 15px var(--accent-glow);
+      box-shadow: 0 0 20px var(--accent-glow);
     }
-    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--accent-glow); }
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 36px rgba(59,130,246,0.6);
+    }
+    @media(max-width:768px) {
+      nav { padding: 14px 20px; }
+      .logo { font-size: 17px; }
+      .nav-cta { padding: 8px 18px; font-size: 13px; }
+    }
 
-    /* ПРОГРЕСС-БАР (ЯРКИЙ) */
-    .progress-bar {
+    /* ── LOADER ЭКРАН ── */
+    #global-loader {
       position: fixed;
-      top: 0; left: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #f59e0b);
-      box-shadow: 0 0 12px rgba(59, 130, 246, 0.8), 0 0 4px #ffffff;
-      z-index: 1000;
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-
-    /* СЕКЦИИ */
-    .video-section { position: relative; height: 500vh; }
-    .canvas-wrapper {
-      position: sticky; top: 0;
-      height: 100vh; width: 100%;
-      overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
-    }
-    canvas { width: 100%; height: 100%; object-fit: cover; }
-
-    .loader {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      font-size: 14px; color: var(--muted); z-index: 10; pointer-events: none;
-    }
-
-    /* ТЕКСТОВЫЙ БЛОК (СВЕРХУ) */
-    .content-overlay {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
+      inset: 0;
+      background: var(--bg);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* Сдвиг наверх */
-      padding-top: 130px; /* Отступ под навигацию */
-      pointer-events: none; z-index: 5;
+      justify-content: center;
+      gap: 28px;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #global-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loader-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .loader-track {
+      width: 240px;
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .loader-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 12px rgba(59,130,246,0.6);
+    }
+    .loader-text {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
     }
 
-    .text-backdrop {
-      background: rgba(5, 8, 16, 0.6); /* Полупрозрачная, не перекрывает видео */
-      backdrop-filter: blur(8px);
-      padding: 18px 24px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-      max-width: 85vw;
+    /* ── ПЕРЕХОД МЕЖДУ СЕКЦИЯМИ ── */
+    .section-fade {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .section-fade.active {
+      opacity: 1;
       pointer-events: auto;
+    }
+
+    /* ── ВИДЕО СЕКЦИИ ── */
+    .video-section {
+      position: relative;
+      height: 500vh;
+    }
+
+    .canvas-wrapper {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── ГРАДИЕНТ ЗА ТЕКСТОМ ── */
+    .text-backdrop {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 60%, rgba(5,8,16,0.72) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .text-backdrop.visible { opacity: 1; }
+
+    /* ── КОНТЕНТ ПОВЕРХ ── */
+    .content-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
+      padding: 80px 24px 40px;
+      pointer-events: none;
+      z-index: 5;
     }
 
     .text-element {
-      opacity: 0; transform: translateY(15px);
-      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+      pointer-events: auto;
     }
-    .text-element.visible { opacity: 1; transform: translateY(0); }
+    .text-element.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* задержки появления */
+    .text-element:nth-child(1) { transition-delay: 0s; }
+    .text-element:nth-child(2) { transition-delay: 0.12s; }
+    .text-element:nth-child(3) { transition-delay: 0.24s; }
 
-    h1, h2 {
-      font-size: clamp(24px, 4.5vw, 52px);
-      font-weight: 800; line-height: 1.1;
-      margin-bottom: 8px; letter-spacing: -0.5px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(30px, 5.5vw, 68px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 18px;
+      letter-spacing: -1.5px;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.6);
     }
-    p {
-      font-size: clamp(13px, 1.8vw, 17px);
-      color: var(--muted); margin: 0 auto 16px;
-      line-height: 1.4; text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    p.section-sub {
+      font-size: clamp(15px, 2vw, 20px);
+      color: rgba(255,255,255,0.82);
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.55;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.8);
+      font-weight: 400;
     }
+
     .cta-btn {
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      color: #fff; padding: 12px 28px;
-      border-radius: 100px; font-weight: 700; font-size: 15px;
-      text-decoration: none; transition: all 0.3s;
-      box-shadow: 0 0 20px var(--accent-glow);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      padding: 14px 36px;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 0 32px rgba(59,130,246,0.45), 0 4px 20px rgba(0,0,0,0.5);
       display: inline-block;
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 35px var(--accent-glow); }
-
-    /* ВОДЯНОЙ ЗНАК */
-    .watermark {
-      position: absolute; bottom: 24px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 11px; font-weight: 600;
-      color: rgba(255,255,255,0.65);
-      background: rgba(0,0,0,0.3);
-      padding: 6px 14px; border-radius: 20px;
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.1);
-      z-index: 6; pointer-events: auto; white-space: nowrap;
+    .cta-btn:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 0 56px rgba(59,130,246,0.65), 0 8px 32px rgba(0,0,0,0.5);
+    }
+    @media(max-width:768px) {
+      h2 { font-size: clamp(26px, 7vw, 44px); }
+      p.section-sub { font-size: clamp(14px, 3.5vw, 17px); }
+      .cta-btn { padding: 12px 28px; font-size: 15px; }
     }
 
-    /* ФУТЕР */
+    /* ── ПОДПИСЬ NIZAMOV.TECH ── */
+    .section-credit {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      z-index: 6;
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+    .canvas-wrapper:hover .section-credit { color: rgba(255,255,255,0.5); }
+
+    /* ── СЧЁТЧИК СЕКЦИИ ── */
+    .section-counter {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 6;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .section-counter.visible { opacity: 1; }
+    .counter-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .counter-line {
+      width: 32px;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .counter-line::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 3s linear;
+    }
+    .counter-line.running::after { width: 100%; }
+    .counter-total {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── FOOTER ── */
     footer {
-      height: 50vh; display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 20px; position: relative; z-index: 10;
-      background: radial-gradient(circle at center, rgba(59,130,246,0.08) 0%, transparent 70%);
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 10;
+      padding: 60px 24px;
+      text-align: center;
     }
-
-    @media (max-width: 768px) {
-      nav { padding: 14px 20px; }
-      .logo { font-size: 18px; }
-      .content-overlay { padding-top: 100px; }
-      .text-backdrop { padding: 14px 18px; }
-      h1, h2 { font-size: clamp(22px, 6vw, 36px); }
-      p { font-size: clamp(12px, 3.5vw, 15px); }
-      .cta-btn { padding: 10px 22px; font-size: 14px; }
+    footer h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+    }
+    .footer-note {
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 12px;
+    }
+    .footer-made {
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+    .footer-made span {
+      color: var(--accent);
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
 
+  <!-- LOADER -->
+  <div id="global-loader">
+    <div class="loader-logo">Nizamov.tech</div>
+    <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
+    <div class="loader-text" id="loaderText">Загружаем магию...</div>
+  </div>
+
+  <!-- ПРОГРЕСС -->
   <div class="progress-bar" id="globalProgress"></div>
 
+  <!-- FADE OVERLAY -->
+  <div class="section-fade" id="sectionFade"></div>
+
+  <!-- НАВ -->
   <nav>
     <div class="logo">Nizamov.tech</div>
     <a href="https://t.me/Aslyamov74" class="nav-cta" target="_blank">Написать →</a>
@@ -180,131 +373,267 @@
   </main>
 
   <footer id="contact">
-    <h2 style="font-size: 36px; text-align:center;">Готовы к потоку клиентов?</h2>
+    <h2>Готовы к потоку клиентов?</h2>
     <a href="https://t.me/Aslyamov74" class="cta-btn" target="_blank">Написать в Telegram</a>
-    <p style="margin-top: 16px; font-size: 13px; color: var(--muted);">© 2025 Nizamov.tech · Челябинск</p>
+    <p class="footer-note">© 2025 Nizamov.tech · Челябинск</p>
+    <p class="footer-made">Этот лендинг сделан <span>Nizamov.tech</span> · от 15 000₽</p>
   </footer>
 
 <script>
+// ─── КОНФИГУРАЦИЯ ────────────────────────────────────────────────────
 const SECTIONS_CONFIG = [
-  { id: 'cosm', folder: 'cosm', frames: 120, title: 'Ваш бизнес готов к взлёту?', sub: 'Привет. Мы создаем сайты, которые работают на вас 24/7.', cta: 'Запустить проект →', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'ney', folder: 'ney', frames: 120, title: 'Хаос превращаем в систему', sub: 'Умный дизайн. Чистый код. ИИ-оптимизация под капотом.', cta: 'Как это работает?', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'list', folder: 'list', frames: 120, title: 'Красота в деталях', sub: 'Прозрачные цены. Никакой воды. Идеально с первого раза.', cta: 'Узнать стоимость', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'fly', folder: 'fly', frames: 120, title: 'Скорость имеет значение', sub: 'Лендинг за 3 дня. Без турбулентности и срывов сроков.', cta: 'Ускорить бизнес →', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'cat', folder: 'cat', frames: 120, title: 'Работаем без стресса', sub: 'Вы заняты бизнесом — мы заботимся о сайте. Клиенты мурлыкают.', cta: 'Начать спокойно', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'vod', folder: 'vod', frames: 120, title: 'Поток клиентов гарантирован', sub: 'Конверсия бьёт ключом. Готовы к масштабу?', cta: 'Получить консультацию →', ctaLink: 'https://t.me/Aslyamov74' }
+  { id: 'cosm', folder: 'cosm', frames: 120,
+    title: 'Ваш бизнес готов к взлёту?',
+    sub: 'Мы создаём лендинги которые работают на вас 24/7.',
+    cta: 'Запустить проект →', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'ney', folder: 'ney', frames: 120,
+    title: 'Хаос превращаем в систему',
+    sub: 'Умный дизайн. Чистый код. Результат с первого раза.',
+    cta: 'Как это работает?', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'list', folder: 'list', frames: 120,
+    title: 'Красота в деталях',
+    sub: 'Прозрачные цены. Никакой воды. Срок — 3 дня.',
+    cta: 'Узнать стоимость', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'fly', folder: 'fly', frames: 120,
+    title: 'Скорость имеет значение',
+    sub: 'Лендинг за 3 дня. Без срывов сроков и лишних встреч.',
+    cta: 'Ускорить бизнес →', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'cat', folder: 'cat', frames: 120,
+    title: 'Работаем без стресса',
+    sub: 'Вы заняты бизнесом — мы заботимся о сайте.',
+    cta: 'Начать спокойно', ctaLink: 'https://t.me/Aslyamov74' },
+  { id: 'vod', folder: 'vod', frames: 120,
+    title: 'Поток клиентов гарантирован',
+    sub: 'Конверсия растёт. Клиенты приходят. Вы масштабируетесь.',
+    cta: 'Получить консультацию →', ctaLink: 'https://t.me/Aslyamov74' }
 ];
 
+const TOTAL = SECTIONS_CONFIG.length;
+
+// ─── ГЕНЕРАЦИЯ РАЗМЕТКИ ──────────────────────────────────────────────
 const container = document.getElementById('sections-container');
-SECTIONS_CONFIG.forEach(cfg => {
+SECTIONS_CONFIG.forEach((cfg, idx) => {
   const sec = document.createElement('section');
   sec.className = 'video-section';
   sec.id = `sec-${cfg.id}`;
   sec.innerHTML = `
     <div class="canvas-wrapper">
       <canvas id="canvas-${cfg.id}"></canvas>
-      <div class="loader" id="loader-${cfg.id}">Загрузка кадров...</div>
+      <div class="text-backdrop" id="backdrop-${cfg.id}"></div>
       <div class="content-overlay">
-        <div class="text-backdrop">
-          <h2 class="text-element" data-trigger="0.15">${cfg.title}</h2>
-          <p class="text-element" data-trigger="0.45">${cfg.sub}</p>
-          <a href="${cfg.ctaLink}" class="cta-btn text-element" data-trigger="0.75" target="_blank">${cfg.cta}</a>
-        </div>
+        <h2 class="text-element" data-trigger="0.12">${cfg.title}</h2>
+        <p class="section-sub text-element" data-trigger="0.30">${cfg.sub}</p>
+        <a href="${cfg.ctaLink}" class="cta-btn text-element" data-trigger="0.52" target="_blank">${cfg.cta}</a>
       </div>
-      <div class="watermark">✨ Этот лендинг сделан Nizamov.tech</div>
+      <div class="section-counter" id="counter-${cfg.id}">
+        <span class="counter-num">0${idx + 1}</span>
+        <div class="counter-line" id="cline-${cfg.id}"></div>
+        <span class="counter-total">/ 0${TOTAL}</span>
+      </div>
+      <div class="section-credit">nizamov.tech</div>
     </div>
   `;
   container.appendChild(sec);
 });
 
+// ─── КЛАСС SCROLL VIDEO ───────────────────────────────────────────────
 class ScrollVideo {
-  constructor(canvasId, folder, totalFrames) {
-    this.canvas = document.getElementById(canvasId);
+  constructor(cfg) {
+    this.cfg = cfg;
+    this.canvas = document.getElementById(`canvas-${cfg.id}`);
     this.ctx = this.canvas.getContext('2d');
-    this.loader = document.getElementById(`loader-${folder}`);
+    this.backdrop = document.getElementById(`backdrop-${cfg.id}`);
+    this.counter = document.getElementById(`counter-${cfg.id}`);
+    this.cline = document.getElementById(`cline-${cfg.id}`);
     this.section = this.canvas.closest('.video-section');
-    this.folder = folder;
-    this.totalFrames = totalFrames;
-    this.frames = []; this.loadedCount = 0;
-    this.currentFrame = 0; this.targetFrame = 0;
-    this.smoothing = 0.12; this.ready = false; this.loading = false;
+    this.frames = [];
+    this.loadedCount = 0;
+    this.currentFrame = 0;
+    this.targetFrame = 0;
+    this.smoothing = 0.08;  // плавнее (было 0.12)
+    this.ready = false;
+    this.loading = false;
+    this.prevProgress = -1;
     this.resize();
   }
-  resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; }
-  async loadFrames() {
-    if (this.ready || this.loading) return; this.loading = true;
+
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    if (this.ready) this.draw(Math.round(this.currentFrame));
+  }
+
+  async loadFrames(onProgress) {
+    if (this.ready || this.loading) return;
+    this.loading = true;
     const promises = [];
-    for (let i = 1; i <= this.totalFrames; i++) {
+    for (let i = 1; i <= this.cfg.frames; i++) {
       const num = String(i).padStart(3, '0');
-      promises.push(this.loadImage(`./frames/${this.folder}/frame_${num}.webp`, i));
+      const src = `./frames/${this.cfg.folder}/frame_${num}.webp`;
+      promises.push(new Promise(resolve => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          this.frames[i - 1] = img;
+          this.loadedCount++;
+          if (onProgress) onProgress(this.cfg.folder, this.loadedCount, this.cfg.frames);
+          resolve();
+        };
+        img.onerror = () => { resolve(); };
+      }));
     }
     await Promise.all(promises);
-    this.ready = true; this.loader.style.display = 'none'; this.draw(0);
+    this.ready = true;
+    this.draw(0);
   }
-  loadImage(src, index) {
-    return new Promise(resolve => {
-      const img = new Image(); img.src = src;
-      img.onload = () => { this.frames[index-1] = img; this.loadedCount++; this.loader.textContent = `${Math.round((this.loadedCount/this.totalFrames)*100)}%`; resolve(); };
-      img.onerror = () => resolve();
-    });
-  }
+
   getProgress() {
     const rect = this.section.getBoundingClientRect();
-    return Math.max(0, Math.min(1, -rect.top / (this.section.offsetHeight - window.innerHeight)));
+    const sh = this.section.offsetHeight;
+    const vh = window.innerHeight;
+    return Math.max(0, Math.min(1, -rect.top / (sh - vh)));
   }
+
   update() {
-    if (!this.ready) return;
+    if (!this.ready) return 0;
     const progress = this.getProgress();
-    this.targetFrame = progress * (this.totalFrames - 1);
+    this.targetFrame = progress * (this.cfg.frames - 1);
     this.currentFrame += (this.targetFrame - this.currentFrame) * this.smoothing;
     this.draw(Math.round(this.currentFrame));
-    this.updateTexts(progress);
+    this.updateUI(progress);
+    this.prevProgress = progress;
     return progress;
   }
+
   draw(index) {
-    const img = this.frames[index]; if (!img) return;
-    const { width: cw, height: ch } = this.canvas;
-    const ratio = img.naturalWidth / img.naturalHeight;
-    const canvasRatio = cw / ch;
-    let dw, dh, dx = 0, dy = 0;
-    if (ratio > canvasRatio) { dh = ch; dw = dh * ratio; dx = (cw - dw)/2; }
-    else { dw = cw; dh = dw / ratio; dy = (ch - dh)/2; }
-    this.ctx.clearRect(0,0,cw,ch);
-    this.ctx.drawImage(img, dx, dy, dw, dh);
+    const img = this.frames[Math.max(0, Math.min(index, this.cfg.frames - 1))];
+    if (!img) return;
+    const ctx = this.ctx;
+    const cw = this.canvas.width, ch = this.canvas.height;
+    const ir = img.naturalWidth / img.naturalHeight;
+    const cr = cw / ch;
+    let dw, dh, dx, dy;
+    if (ir > cr) { dh = ch; dw = dh * ir; dx = (cw - dw) / 2; dy = 0; }
+    else { dw = cw; dh = dw / ir; dx = 0; dy = (ch - dh) / 2; }
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, dx, dy, dw, dh);
   }
-  updateTexts(progress) {
-    this.section.querySelectorAll('.text-element').forEach(el => {
-      el.classList.toggle('visible', progress >= parseFloat(el.dataset.trigger));
+
+  updateUI(progress) {
+    // Backdrop — появляется с 0.08 прогресса
+    const showBackdrop = progress > 0.08;
+    this.backdrop.classList.toggle('visible', showBackdrop);
+
+    // Counter
+    const showCounter = progress > 0.05;
+    this.counter.classList.toggle('visible', showCounter);
+    if (showCounter && !this.cline.classList.contains('running')) {
+      this.cline.classList.add('running');
+    }
+
+    // Текст
+    const texts = this.section.querySelectorAll('.text-element');
+    texts.forEach(el => {
+      const trigger = parseFloat(el.dataset.trigger);
+      el.classList.toggle('visible', progress >= trigger);
     });
+  }
+
+  isInView() {
+    const rect = this.section.getBoundingClientRect();
+    return rect.top < window.innerHeight && rect.bottom > 0;
+  }
+
+  isComingSoon() {
+    const rect = this.section.getBoundingClientRect();
+    return rect.top < window.innerHeight * 2.5 && rect.top > 0;
   }
 }
 
-const videos = SECTIONS_CONFIG.map(c => new ScrollVideo(`canvas-${c.id}`, c.folder, c.frames));
+// ─── ИНИЦИАЛИЗАЦИЯ ───────────────────────────────────────────────────
+const videos = SECTIONS_CONFIG.map(cfg => new ScrollVideo(cfg));
+const loaderFill = document.getElementById('loaderFill');
+const loaderText = document.getElementById('loaderText');
+const globalLoader = document.getElementById('global-loader');
 const globalProgress = document.getElementById('globalProgress');
-let lastIdx = 0;
+const sectionFade = document.getElementById('sectionFade');
 
-function loop() {
-  let visIdx = -1;
-  videos.forEach((v, i) => {
-    const r = v.section.getBoundingClientRect();
-    const inView = r.top < window.innerHeight && r.bottom > 0;
-    const near = r.top < window.innerHeight * 2 && r.top > 0;
-    if (inView && v.ready) { v.update(); visIdx = i; }
-    else if (near && !v.ready && !v.loading) v.loadFrames();
-  });
-  if (visIdx !== lastIdx && visIdx !== -1) {
-    const next = visIdx + 1;
-    if (next < videos.length && !videos[next].ready && !videos[next].loading) videos[next].loadFrames();
-    lastIdx = visIdx;
+let totalLoaded = 0;
+const totalFirstTwo = SECTIONS_CONFIG[0].frames + (SECTIONS_CONFIG[1] ? SECTIONS_CONFIG[1].frames : 0);
+
+function onProgress(folder, loaded, total) {
+  // Считаем только первые две секции для loader
+  const sIdx = SECTIONS_CONFIG.findIndex(c => c.folder === folder);
+  if (sIdx < 2) {
+    totalLoaded++;
+    const pct = Math.round((totalLoaded / totalFirstTwo) * 100);
+    loaderFill.style.width = pct + '%';
+    loaderText.textContent = pct < 100 ? `Загружаем... ${pct}%` : 'Готово!';
+    if (pct >= 100) {
+      setTimeout(() => globalLoader.classList.add('hidden'), 400);
+    }
   }
-  globalProgress.style.width = `${(window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100}%`;
-  requestAnimationFrame(loop);
+}
+
+// Грузим первые две секции сразу
+videos[0].loadFrames(onProgress);
+if (videos[1]) videos[1].loadFrames(onProgress);
+
+// Фикс: если кадров мало — сразу скрываем лоадер через 3 сек
+setTimeout(() => globalLoader.classList.add('hidden'), 3000);
+
+// ─── ПЕРЕХОД МЕЖДУ СЕКЦИЯМИ ──────────────────────────────────────────
+let lastSection = -1;
+let isFading = false;
+
+function triggerSectionChange(newIdx) {
+  if (isFading || newIdx === lastSection) return;
+  isFading = true;
+  sectionFade.classList.add('active');
+  setTimeout(() => {
+    sectionFade.classList.remove('active');
+    isFading = false;
+    lastSection = newIdx;
+  }, 350);
+}
+
+// ─── RENDER LOOP ─────────────────────────────────────────────────────
+function renderLoop() {
+  let visibleIdx = -1;
+
+  videos.forEach((v, i) => {
+    if (v.isInView()) {
+      if (v.ready) {
+        v.update();
+        visibleIdx = i;
+      }
+      // Грузим следующую заранее
+      if (i + 1 < videos.length) {
+        const next = videos[i + 1];
+        if (!next.ready && !next.loading) next.loadFrames(onProgress);
+      }
+    } else if (v.isComingSoon() && !v.ready && !v.loading) {
+      v.loadFrames(onProgress);
+    }
+  });
+
+  // Переход между секциями
+  if (visibleIdx !== -1 && visibleIdx !== lastSection) {
+    triggerSectionChange(visibleIdx);
+  }
+
+  // Глобальный прогресс-бар
+  const totalScroll = document.body.scrollHeight - window.innerHeight;
+  if (totalScroll > 0) {
+    globalProgress.style.width = `${(window.scrollY / totalScroll) * 100}%`;
+  }
+
+  requestAnimationFrame(renderLoop);
 }
 
 window.addEventListener('resize', () => videos.forEach(v => v.resize()));
-videos[0].loadFrames(); if (videos[1]) videos[1].loadFrames();
-requestAnimationFrame(loop);
-</script>
 
+requestAnimationFrame(renderLoop);
+</script>
 </body>
 </html>

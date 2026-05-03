@@ -47,8 +47,7 @@
       padding: 20px 40px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      background: rgba(5,8,16,0.75);
+      align-items: center;      background: rgba(5,8,16,0.75);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -97,8 +96,7 @@
       transition: all 0.3s;
       box-shadow: 0 0 20px var(--accent-glow);
     }
-    .nav-cta:hover {
-      transform: translateY(-2px);
+    .nav-cta:hover {      transform: translateY(-2px);
       box-shadow: 0 0 36px rgba(59,130,246,0.6);
     }
     @media(max-width:768px) {
@@ -147,8 +145,7 @@
       border-radius: 2px;
       width: 0%;
       transition: width 0.3s ease;
-      box-shadow: 0 0 12px rgba(59,130,246,0.6);
-    }
+      box-shadow: 0 0 12px rgba(59,130,246,0.6);    }
     .loader-text {
       font-size: 12px;
       color: var(--muted);
@@ -197,8 +194,7 @@
     /* ── ГРАДИЕНТ ЗА ТЕКСТОМ ── */
     .text-backdrop {
       position: absolute;
-      inset: 0;
-      background:
+      inset: 0;      background:
         radial-gradient(ellipse 70% 50% at 50% 60%, rgba(5,8,16,0.72) 0%, transparent 100%);
       pointer-events: none;
       z-index: 3;
@@ -247,8 +243,7 @@
     }
     p.section-sub {
       font-size: clamp(15px, 2vw, 20px);
-      color: rgba(255,255,255,0.82);
-      max-width: 560px;
+      color: rgba(255,255,255,0.82);      max-width: 560px;
       margin: 0 auto 32px;
       line-height: 1.55;
       text-shadow: 0 1px 12px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.8);
@@ -297,8 +292,7 @@
       text-transform: uppercase;
       z-index: 6;
       pointer-events: none;
-      transition: color 0.3s;
-    }
+      transition: color 0.3s;    }
     .canvas-wrapper:hover .section-credit { color: rgba(255,255,255,0.5); }
 
     /* ── СЧЁТЧИК СЕКЦИИ ── */
@@ -347,8 +341,7 @@
     footer {
       min-height: 60vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: center;      justify-content: center;
       flex-direction: column;
       gap: 20px;
       position: relative;
@@ -397,8 +390,7 @@
       color: var(--accent2);
       text-decoration: underline;
     }
-  </style>
-</head>
+  </style></head>
 <body>
 
   <!-- LOADER -->
@@ -447,8 +439,7 @@ const SECTIONS_CONFIG = [
     title: 'Ваш бизнес готов к взлёту?',
     sub: 'Мы создаём лендинги которые работают на вас 24/7.',
     cta: 'Запустить проект →', ctaLink: 'https://t.me/Aslyamov74' },
-  { id: 'ney', folder: 'ney', frames: 120,
-    title: 'Хаос превращаем в систему',
+  { id: 'ney', folder: 'ney', frames: 120,    title: 'Хаос превращаем в систему',
     sub: 'Умный дизайн. Чистый код. Результат с первого раза.',
     cta: 'Как это работает?', ctaLink: 'https://t.me/Aslyamov74' },
   { id: 'list', folder: 'list', frames: 120,
@@ -470,6 +461,10 @@ const SECTIONS_CONFIG = [
 ];
 
 const TOTAL = SECTIONS_CONFIG.length;
+
+// Определение мобильного устройства
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+const frameSkip = isMobile ? 2 : 1; // На мобильном пропускаем каждый 3-й кадр
 
 // ─── ГЕНЕРАЦИЯ РАЗМЕТКИ ──────────────────────────────────────────────
 const container = document.getElementById('sections-container');
@@ -493,11 +488,10 @@ SECTIONS_CONFIG.forEach((cfg, idx) => {
       </div>
       <div class="section-credit">nizamov.tech</div>
     </div>
-  `;
-  container.appendChild(sec);
+  `;  container.appendChild(sec);
 });
 
-// ─── КЛАСС SCROLL VIDEO ───────────────────────────────────────────────
+// ─── КЛАСС SCROLL VIDEO (ОПТИМИЗИРОВАННЫЙ) ──────────────────────────
 class ScrollVideo {
   constructor(cfg) {
     this.cfg = cfg;
@@ -509,12 +503,17 @@ class ScrollVideo {
     this.section = this.canvas.closest('.video-section');
     this.frames = [];
     this.loadedCount = 0;
+    
+    // LERP для плавности
     this.currentFrame = 0;
     this.targetFrame = 0;
-    this.smoothing = 0.08;
+    this.smoothing = isMobile ? 0.15 : 0.08; // На мобильном быстрее догоняет
+    
     this.ready = false;
     this.loading = false;
     this.prevProgress = -1;
+    this.lastDrawnFrame = -1;
+    
     this.resize();
   }
 
@@ -527,15 +526,18 @@ class ScrollVideo {
   async loadFrames(onProgress) {
     if (this.ready || this.loading) return;
     this.loading = true;
+    
+    // Загружаем только первые 40 кадров сразу (критичные)
+    const initialFrames = Math.min(40, this.cfg.frames);
     const promises = [];
-    for (let i = 1; i <= this.cfg.frames; i++) {
+    
+    for (let i = 1; i <= initialFrames; i++) {
       const num = String(i).padStart(3, '0');
       const src = `./frames/${this.cfg.folder}/frame_${num}.webp`;
       promises.push(new Promise(resolve => {
         const img = new Image();
         img.src = src;
-        img.onload = () => {
-          this.frames[i - 1] = img;
+        img.onload = () => {          this.frames[i - 1] = img;
           this.loadedCount++;
           if (onProgress) onProgress(this.cfg.folder, this.loadedCount, this.cfg.frames);
           resolve();
@@ -543,9 +545,33 @@ class ScrollVideo {
         img.onerror = () => { resolve(); };
       }));
     }
+    
     await Promise.all(promises);
     this.ready = true;
     this.draw(0);
+    
+    // Загружаем остальные кадры фоном
+    this.loadRemainingFrames(onProgress);
+  }
+  
+  async loadRemainingFrames(onProgress) {
+    for (let i = 41; i <= this.cfg.frames; i++) {
+      const num = String(i).padStart(3, '0');
+      const src = `./frames/${this.cfg.folder}/frame_${num}.webp`;
+      
+      await new Promise(resolve => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          this.frames[i - 1] = img;
+          resolve();
+        };
+        img.onerror = () => { resolve(); };
+      });
+      
+      // Небольшая пауза чтобы не блокировать рендер
+      if (i % 10 === 0) await new Promise(r => setTimeout(r, 10));
+    }
   }
 
   getProgress() {
@@ -557,25 +583,49 @@ class ScrollVideo {
 
   update() {
     if (!this.ready) return 0;
+    
     const progress = this.getProgress();
     this.targetFrame = progress * (this.cfg.frames - 1);
+        // LERP — плавное приближение
     this.currentFrame += (this.targetFrame - this.currentFrame) * this.smoothing;
-    this.draw(Math.round(this.currentFrame));
+    
+    // Округляем с учётом frameSkip
+    const frameIndex = Math.round(this.currentFrame);
+    const adjustedFrame = Math.floor(frameIndex / frameSkip) * frameSkip;
+    
+    // Рисуем только если кадр изменился
+    if (adjustedFrame !== this.lastDrawnFrame) {
+      this.draw(adjustedFrame);
+      this.lastDrawnFrame = adjustedFrame;
+    }
+    
     this.updateUI(progress);
     this.prevProgress = progress;
     return progress;
   }
 
   draw(index) {
-    const img = this.frames[Math.max(0, Math.min(index, this.cfg.frames - 1))];
+    const img = this.frames[Math.max(0, Math.min(index, this.frames.length - 1))];
     if (!img) return;
+    
     const ctx = this.ctx;
     const cw = this.canvas.width, ch = this.canvas.height;
     const ir = img.naturalWidth / img.naturalHeight;
     const cr = cw / ch;
     let dw, dh, dx, dy;
-    if (ir > cr) { dh = ch; dw = dh * ir; dx = (cw - dw) / 2; dy = 0; }
-    else { dw = cw; dh = dw / ir; dx = 0; dy = (ch - dh) / 2; }
+    
+    if (ir > cr) { 
+      dh = ch; 
+      dw = dh * ir; 
+      dx = (cw - dw) / 2; 
+      dy = 0; 
+    } else { 
+      dw = cw; 
+      dh = dw / ir; 
+      dx = 0; 
+      dy = (ch - dh) / 2; 
+    }
+    
     ctx.clearRect(0, 0, cw, ch);
     ctx.drawImage(img, dx, dy, dw, dh);
   }
@@ -583,11 +633,13 @@ class ScrollVideo {
   updateUI(progress) {
     const showBackdrop = progress > 0.08;
     this.backdrop.classList.toggle('visible', showBackdrop);
+    
     const showCounter = progress > 0.05;
-    this.counter.classList.toggle('visible', showCounter);
+    this.counter.classList.toggle('visible', showCounter);    
     if (showCounter && !this.cline.classList.contains('running')) {
       this.cline.classList.add('running');
     }
+    
     const texts = this.section.querySelectorAll('.text-element');
     texts.forEach(el => {
       const trigger = parseFloat(el.dataset.trigger);
@@ -615,7 +667,7 @@ const globalProgress = document.getElementById('globalProgress');
 const sectionFade = document.getElementById('sectionFade');
 
 let totalLoaded = 0;
-const totalFirstTwo = SECTIONS_CONFIG[0].frames + (SECTIONS_CONFIG[1] ? SECTIONS_CONFIG[1].frames : 0);
+const totalFirstTwo = SECTIONS_CONFIG[0].frames + (SECTIONS_CONFIG[1] ? Math.min(40, SECTIONS_CONFIG[1].frames) : 0);
 
 function onProgress(folder, loaded, total) {
   const sIdx = SECTIONS_CONFIG.findIndex(c => c.folder === folder);
@@ -630,9 +682,9 @@ function onProgress(folder, loaded, total) {
   }
 }
 
+// Загружаем первую секцию полностью, вторую — частично
 videos[0].loadFrames(onProgress);
-if (videos[1]) videos[1].loadFrames(onProgress);
-setTimeout(() => globalLoader.classList.add('hidden'), 3000);
+if (videos[1]) videos[1].loadFrames(onProgress);setTimeout(() => globalLoader.classList.add('hidden'), 3000);
 
 // ─── ПЕРЕХОД МЕЖДУ СЕКЦИЯМИ ──────────────────────────────────────────
 let lastSection = -1;
@@ -650,7 +702,18 @@ function triggerSectionChange(newIdx) {
 }
 
 // ─── RENDER LOOP ─────────────────────────────────────────────────────
-function renderLoop() {
+let lastRenderTime = 0;
+const targetFPS = isMobile ? 30 : 60;
+const frameInterval = 1000 / targetFPS;
+
+function renderLoop(timestamp) {
+  // Ограничиваем FPS на мобильных
+  if (timestamp - lastRenderTime < frameInterval) {
+    requestAnimationFrame(renderLoop);
+    return;
+  }
+  lastRenderTime = timestamp;
+
   let visibleIdx = -1;
 
   videos.forEach((v, i) => {
@@ -671,7 +734,6 @@ function renderLoop() {
   if (visibleIdx !== -1 && visibleIdx !== lastSection) {
     triggerSectionChange(visibleIdx);
   }
-
   const totalScroll = document.body.scrollHeight - window.innerHeight;
   if (totalScroll > 0) {
     globalProgress.style.width = `${(window.scrollY / totalScroll) * 100}%`;
